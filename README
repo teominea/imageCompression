@@ -1,0 +1,53 @@
+/* MINEA TEODORA-MARIA, 311CB */
+
+In realizarea acestei teme am folosit functiile pentru initializarea cozii, extragerea din coada, introducerea in coada si distrugerea cozii din scheletele de laborator, adaptate cerintelor.
+
+Am definit structura RGB care contine trei campuri de tip unsigned char pentru blocurile de culoare rosie, verde si albastra.
+
+Am definit structura pentru arbore care contine informatiile urmatoare : "tip" de tip unsigned char (0 - daca este nod intern sau 1 - daca este frunza), "info" de tip RGB in care vor fi stocate datele despre culoare in cazul in care nodul este frunza, "size" de tip unsigned int in care se retine dimensiunea laturii patratului descris de nodul respectiv si 4 pointeri de tip TNod* catre cei 4 fii ai arborelui (fiu1, fiu2, fiu3, fiu4)
+
+TASK 1
+
+	In cazul in care primul parametru din linia de comanda este "-c1", vom aplica functiile si operatiile pentru cerinta 1. In primul rand, am deschis fisierele de input (binar), dat ca al treilea parametru in linia de comanda si output (text), dat ca al patrulea parametru in linia de comanda. 
+	Citim din fisier tipul fisierului (retinut intr-un sir de caractere), dimensiunile imaginii (retinute in doua variabile de tip unsigned int), valoarea maxima pe care o poate atinge o culoare (retinuta intr-o variabila de tip unsigned int) si caracterul care marcheaza finalul datelor despre fisier si inceputul imaginii propriu zise.
+	Cu ajutorul unei matrice de tip RGB** alocata dinamic, vom citi pixelii imaginii.
+	Urmeaza sa apelam functia de constructie a arborelui care este conceputa in felul urmator: primeste ca parametri matricea de pixeli, coordonatele coltului din stanga sus al patratului in care ne aflam din matricea de pixeli, lungimea laturii patratului in care ne aflam si factorul primit ca al doilea parametru in linia de comanda (pe care l-am convertit in tip int folosind functia atoi()).
+	In cadrul functiei de constructie a arborelui ne vom folosi de alte 4 functii auxiliare :
+		- sum_red - primeste ca parametri matricea de pixeli, coordonatele x si y corespunzatoare liniei si coloanei pe care ne aflam in imagine si dimensiunea imaginii in care ne aflam. Functia foloseste formula descrisa in enuntul temei pentru a calcula media aritmetica pentru blocul de culoare rosie din submatricea de pixeli.
+		- sum_green - primeste ca parametri matricea de pixeli, coordonatele x si y corespunzatoare liniei si coloanei pe care ne aflam in imagine si dimensiunea imaginii in care ne aflam. Functia foloseste formula descrisa in enuntul temei pentru a calcula media aritmetica pentru blocul de culoare verde din submatricea de pixeli.
+		- sum_blue - primeste ca parametri matricea de pixeli, coordonatele x si y corespunzatoare liniei si coloanei pe care ne aflam in imagine si dimensiunea imaginii in care ne aflam. Functia foloseste formula descrisa in enuntul temei pentru a calcula media aritmetica pentru blocul de culoare albastra din submatricea de pixeli.
+		- calc_mean - primeste ca parametri rezultatele returnate de cele 3 functii de mai sus, matricea de pixeli, coordonatele x si y corespunzatoare liniei si coloanei pe care ne aflam in imagine si dimensiunea imaginii in care ne aflam. Functia foloseste formula descrisa in enuntul temei pentru a calcula scorul similaritatii blocului care are drept coordonate initiale x si y.
+	In functia de constructie a arborelui calculam scorul similaritatii folosind functiile de mai sus si il comparam cu factorul primit de la tastatura. Daca este mai mic, arborele va ramane o frunza, iar in arb->info vom stoca informatiile rezultate din functiile sum_red, sum_green si sum_blue. Daca nu indeplineste conditia, arborele se va ramifica si apelam recusiv functia in felul urmator:
+	- pentru fiul 1 : parametri raman aceeasi, mai putin dimensiunea laturii, care se va injumatati.
+	- pentru fiul 2 : parametri raman aceeasi, mai putin coordonata y, careia i se va adauga jumatate din dimensiunea laturii si dimensiunea laturii, care se va injumatati.
+	- pentru fiul 3 : parametri raman aceeasi, mai putin coordonata y, careia i se va adauga jumatate din dimensiunea laturii, coordonata x, careia i se va adauga jumatate din dimensiunea laturii si dimensiunea laturii, care se va injumatati.
+	- pentru fiul 4 : parametri raman aceeasi, mai putin coordonata x, careia i se va adauga jumatate din dimensiune si dimensiunea laturii, care se va injumatati.
+	Dupa ce am construit arborele, vom calcula informatiile cerute folosind cate o functie specifica pentru fiecare dintre cerinte:
+	- functia de calcul a frunzelor : parcurgem recursiv arborele in adancime folosind un contor care va creste de fiecare data cand fii arborelui curent sunt nuli, care va fi returnat la finalul functiei.
+	- functia de calcul a nivelului maxim : parcurgem recursiv arborele in adancime folosind 4 contoare (f1, f2, f3 si f4) care vor retine nivelul maxim din fiecare subarbore. Functia va returna contorul cu cea mai mare valoare, pentru a determina numarul de niveluri din arbore.
+	- functia de calcul a dimensiunii maxime a unui bloc nedivizat : am introdus radacina arborelui intr-o coada, iar apoi am parcurs arborele pe nivel extragand cate un nod din coada si introducandu-i fii in cazul in care era intern. Cand gaseste primul nod de tip frunza, salveaza dimensiunea acestuia intr-o variabila de tip pointer primita ca parametru si iese din functie.
+	La final se scriu informatiile obtinute in fisierul de output, se elibereaza memoria si se inchid fisierele.
+
+TASK 2
+
+	In cazul in care primul parametru din linia de comanda este "-c2", vom aplica functiile si operatiile pentru cerinta 2. In primul rand, am deschis fisierele de input (binar), dat ca al treilea parametru in linia de comanda si output (binar), dat ca al patrulea parametru in linia de comanda. 
+	Citim din fisier tipul fisierului (retinut intr-un sir de caractere), dimensiunile imaginii (retinute in doua variabile de tip unsigned int), valoarea maxima pe care o poate atinge o culoare (retinuta intr-o variabila de tip unsigned int) si caracterul care marcheaza finalul datelor despre fisier si inceputul imaginii propriu zise.
+	Cu ajutorul unei matrice de tip RGB** alocata dinamic, vom citi pixelii imaginii.
+	Analog cu task 1, vom construi arborele. Apoi, vom introduce radacina acestuia intr-o coada folosind functia de initializare. In functia parcurgere_nivel, vom extrage noduri din coada pana cand aceasta este vida. Pentru primul nod vom afisa dimensiunea acestuia in fisierul de output (intrucat radacina are dimensiunea laturii nedivizate). Ulterior, daca nodul este intern, ii vom introduce copii in coada si vom afisa in fisier tipul acestuia, daca nu, vom afisa tipul frunzei in fisier si totodata informatiile despre culori retinute in arb->info.
+	Dupa apelarea acestei functii in main se elibereaza memoria si se inchid fisierele.
+	
+
+TASK 3
+
+	In cazul in care primul parametru din linia de comanda este "-d", vom aplica functiile si operatiile pentru cerinta 3. In primul rand, am deschis fisierele de input (binar), dat ca al doilea parametru in linia de comanda si output (binar), dat ca al treilea parametru in linia de comanda. 
+	Citim din fisierul de input prima informatie, respectiv dimensiunea care este de tip unsigned int pe care o vom salva in variabila size. Apoi, vom afisa in fisierul de output informatiile rerferitoare la tipul fisierului (P6), dimensiunile imaginii (size size) si valoarea maxima pe care o poate lua o culoare (255). Apoi vom apela functia de citire din fisier care va returna o coada in care este retinuta parcurgerea pe nivel a arborelui initial. Functia va opera in felul urmator :alocam dinamic un vector prin intermediul caruia citim informatiile din fisierul binar. Dupa ce am introdus informatiile in vector, il vom parcurge din nou, creand un nod pentru fiecare valoare de 0 sau 1 a vectorului, nod pe care il vom introduce intr-o coada. Daca elementul curent din vector are valoarea 1, urmatoarele 3 informatii vor fi cele de culoare, asa ca le vom salva in arb->info. Dupa aceasta parcurgere, vom returna coada.
+	Dupa ce am creat coada, vom reconstrui arborele. In functia make_arb m-am folosit de o coada auxiliara in care am introdus primul element extras din coada initiala creata anterior. Am parcurs ambele cozi cat timp acestea erau nevide, extragand din coada auxiliara cate un nod. In cazul in care nodul este intern, se vor extrage din coada initiala inca 4 noduri care vor fi copii nodului respectiv si se vor introduce in coada auxiliara. La final se returneaza arborele creat.
+	Pentru a crea matricea de pixeli am construit functia deconstr_arb, prin intermediul careia am parcurs recursiv arborele in adancime. Functia este de tip RGB** si primeste ca parametri arborele recreat, coordonatele din coltul de stanga sus ale patratului curent in care ne aflam in imagine (x si y), matricea de pixeli pe care o construim de tip RGB** si dimensiunea imaginii. Parcurgerea se face in felul urmator:
+	- daca nodul este intern matricea va lua valoarea functiei reapelate mai intai pentru fiul 1 al arborelui, cu x si y neschimbate si dimensiunea injumatatita (patratul din stanga sus). Apoi, matricea va lua valoarea functiei reapelate pentru fiul 2 al arborelui, cu x neschimbat, y adunat cu dimensiunea injumatatita a imaginii initiale si dimensiunea injumatatita (patratul din dreapta sus). Apoi, matricea va lua valoarea functiei reapelate pentru fiul 3 al arborelui cu x si y adunate cu dimensiunea injumatatita a imaginii si dimnensiunea injumatatita (patratul din dreapta jos), iar ulterior, matricea va lua valoarea functiei reapelate pentru fiul 4 al arborelui cu y neschimbat, x adunat cu jumatate din dimensiunea imaginii initiale si dimensiunea injumatatita.
+	- daca nodul este frunza, aturnci se vor retine in pixelii matricei delimitati de (x,y) (x+size,y+size) informatiile despre culorile red, green si blue ale nodului respectiv.
+	Functia returneaza matricea, iar in main o vom parcurge din nou, scriind in fisierul de output informatiile despre elementele matricei in ordinea red, green, blue pentru fiecare pixel.
+	
+Pe checkerul local am obtinut 80 puncte pentru taskuri si 20 puncte bonus.
+	
+	
+
